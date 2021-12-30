@@ -705,6 +705,10 @@ void link_MachO_arm64(std::unique_ptr<LinkGraph> G,
     Config.PrePrunePasses.push_back(
         CompactUnwindSplitter("__LD,__compact_unwind"));
 
+    Config.PrePrunePasses.push_back(EHFrameSplitter("__TEXT,__eh_frame"));
+    Config.PrePrunePasses.push_back(EHFrameEdgeFixer("__TEXT,__eh_frame",
+        8, Delta64, Delta32, NegDelta32));
+
     // Add an in-place GOT/Stubs pass.
     Config.PostPrunePasses.push_back(
         PerGraphGOTAndPLTStubsBuilder_MachO_arm64::asPass);
